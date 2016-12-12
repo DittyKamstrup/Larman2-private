@@ -9,8 +9,8 @@ namespace FS_06_12_2016.Model
 {
     public class TilmeldteHuse : INotifyPropertyChanged
     {
-        
-        
+
+
         private int antalVoksen;
 
         public int AntalVoksen
@@ -46,7 +46,7 @@ namespace FS_06_12_2016.Model
                 OnPropertyChanged(nameof(AntalBarn));
             }
         }
-        
+
         public double AntalKuverter;
 
         private double dagsPris;
@@ -57,7 +57,7 @@ namespace FS_06_12_2016.Model
             set
             {
                 dagsPris = value;
-                OnPropertyChanged(nameof(DagsPris));
+                    OnPropertyChanged(nameof(DagsPris));        
             }
         }
 
@@ -74,7 +74,7 @@ namespace FS_06_12_2016.Model
 
         //private List<Person> personListe;
 
-        public TilmeldteHuse(int husnr,int antalvoksne,int antalung,int antalbarn)
+        public TilmeldteHuse(int husnr, int antalvoksne, int antalung, int antalbarn)
         {
             this.husNr = husnr;
             this.AntalVoksen = antalvoksne;
@@ -85,17 +85,17 @@ namespace FS_06_12_2016.Model
 
         public TilmeldteHuse()
         {
-            
+
         }
 
-        
+
 
         public double GetAntalKuverter()
         {
             double AntalKuverter;
 
             AntalKuverter = AntalVoksen + (AntalUng * 0.5) + (AntalBarn * 0.25);
-           
+
             return AntalKuverter;
 
         }
@@ -104,7 +104,7 @@ namespace FS_06_12_2016.Model
         {
             return $"Husnummer: {HusNr} \n " +
                    $"Antal Voksne: {AntalVoksen} \n Antal Unge: {AntalUng} Antal Børn: {AntalBarn}" +
-                   
+
                    $" DagsPris: {DagsPris}";
         }
 

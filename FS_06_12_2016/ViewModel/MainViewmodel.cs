@@ -47,7 +47,7 @@ namespace FS_06_12_2016.ViewModel
         public Uge NyUge { get; set; }
 
         public Dag UgeDag { get; set; }
-        public TilmeldteHuse hus1;
+        //public TilmeldteHuse hus1;
         //public Uge uge1;
 
         //private double samletPris;
@@ -136,30 +136,31 @@ namespace FS_06_12_2016.ViewModel
 
 
             NyUge = new Uge();
-            
+
 
         }
 
         public void AddNewHus()
         {
-            TilmeldteHuse hus = new TilmeldteHuse();
-            hus = NewHus;
-          
+            //TilmeldteHuse hus = new TilmeldteHuse();
+            //hus = NewHus;
+            // Outcommented. No reason to create local variable when property can just be used directly.
+            // just use NewHus instead of hus :)
 
             //kopiere et hus og lægger det ind
-            TilmeldteHuse mandag_hus = new TilmeldteHuse(hus.HusNr, hus.AntalVoksen, hus.AntalUng, hus.AntalBarn);
+            TilmeldteHuse mandag_hus = new TilmeldteHuse(NewHus.HusNr, NewHus.AntalVoksen, NewHus.AntalUng, NewHus.AntalBarn);
             NyUge.MandagListe.Alletilmeldtehuse.Add(mandag_hus);
 
-            TilmeldteHuse tirsdag_hus = new TilmeldteHuse(hus.HusNr, hus.AntalVoksen, hus.AntalUng, hus.AntalBarn);
+            TilmeldteHuse tirsdag_hus = new TilmeldteHuse(NewHus.HusNr, NewHus.AntalVoksen, NewHus.AntalUng, NewHus.AntalBarn);
             NyUge.TirsdagListe.Alletilmeldtehuse.Add(tirsdag_hus);
 
-            TilmeldteHuse onsdag_hus = new TilmeldteHuse(hus.HusNr, hus.AntalVoksen, hus.AntalUng, hus.AntalBarn);
+            TilmeldteHuse onsdag_hus = new TilmeldteHuse(NewHus.HusNr, NewHus.AntalVoksen, NewHus.AntalUng, NewHus.AntalBarn);
             NyUge.OnsdagListe.Alletilmeldtehuse.Add(onsdag_hus);
 
-            TilmeldteHuse torsdag_hus = new TilmeldteHuse(hus.HusNr, hus.AntalVoksen, hus.AntalUng, hus.AntalBarn);
+            TilmeldteHuse torsdag_hus = new TilmeldteHuse(NewHus.HusNr, NewHus.AntalVoksen, NewHus.AntalUng, NewHus.AntalBarn);
             NyUge.TorsDagListe.Alletilmeldtehuse.Add(torsdag_hus);
 
-            this.alletilmeldtehuse.Add(hus);
+            this.alletilmeldtehuse.Add(NewHus);
 
 
         }
@@ -172,7 +173,6 @@ namespace FS_06_12_2016.ViewModel
 
             foreach (var hus in alletilmeldtehuse)
             {
-
 
                 //kopiere det hus den er nået til på listen
                 TilmeldteHuse mandag_hus = new TilmeldteHuse(hus.HusNr, hus.AntalVoksen, hus.AntalUng, hus.AntalBarn);
@@ -220,12 +220,25 @@ namespace FS_06_12_2016.ViewModel
         {
             NyUge.UdgiftUge = this.udgiftUge;
             this.Kuvert = NyUge.GetKuvertPrisUgen();
-            foreach (var hus in Alletilmeldtehuse)
+
+            // Workaround by Martin Bagge.
+            // For some reason, the OnPropertyChanged is raised too early for some of the objects
+            // This means that not all objects are updated in the view.
+
+            // Worked around this by simply pouring the entire list into a new local list
+            // Then after doing operation, poured it back into the bound list. Now the view updates everything at the same time.
+
+            var alleHuseBeregnet = Alletilmeldtehuse;
+            Alletilmeldtehuse = new ItemsChangeObservableCollection<TilmeldteHuse>();
+
+            foreach (var hus in alleHuseBeregnet)
             {
                 GetUdgiftPrUgePrHus(hus);
             }
+            Alletilmeldtehuse = alleHuseBeregnet;
+
         }
-       
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
